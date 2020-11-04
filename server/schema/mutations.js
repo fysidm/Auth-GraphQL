@@ -1,0 +1,27 @@
+const graphql = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLString
+} = graphql;
+const UserType = require('./types/user_type');
+const AuthService = require('../services/auth');
+
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    signup: {
+      type: UserType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      // req means something comes from express server
+      resolve(parentValue, { email, password }, req) {
+        // pass to helper function/object
+        return AuthService.signup({ email, password, req });
+      }
+    }
+  }
+});
+
+module.exports = mutation;
